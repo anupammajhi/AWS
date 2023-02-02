@@ -19,3 +19,8 @@ for region in $(aws ec2 describe-regions --output text --query 'Regions[*].Regio
   done
 done
 
+if [[ $count -gt 0 ]]; then
+  echo "Deleted $count unattached volumes"
+else
+  echo "No unattached volumes found"
+fi
