@@ -8,5 +8,3 @@ for region in $(aws ec2 describe-regions --output text --query 'Regions[*].Regio
   echo "Processing region $region..."
 
   aws ec2 describe-volumes --region $region --output text --query 'Volumes[*].{Attachments:Attachments,VolumeId:VolumeId}' | \
-  while read -r attachments volume_id; do
-    if [[ -z "$attachments" ]]; then
