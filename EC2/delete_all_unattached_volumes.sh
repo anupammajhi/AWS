@@ -15,3 +15,7 @@ for region in $(aws ec2 describe-regions --output text --query 'Regions[*].Regio
       count=$((count+1))
     else
       echo "Volume $volume_id is attached in region $region, skipping."
+    fi
+  done
+done
+
