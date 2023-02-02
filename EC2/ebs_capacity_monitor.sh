@@ -1,8 +1,17 @@
 #!/usr/bin/env bash
 
-## Usage: ebs_capacity_monitor
 ## Author: Anupam Majhi
+## Github: https://github.com/anupammajhi/AWS
 ## Description: This script generates a report of mounted ebs volumes and partitions to an EC2 instance. It includes EBS Volume Device name, Mapping to the instance, the filesystem and mountpoints to the instance along with disk capacity information.
+
+if [[ "$1" == "-h" || "$1" == "--help" || "$1" == "help" ]]; then
+  echo "Usage: ebs_capacity_monitor"
+  echo ""
+  echo "This script generates a report of mounted ebs volumes and partitions to an EC2 instance. It includes EBS Volume Device name, Mapping to the instance, the filesystem and mountpoints to the instance along with disk capacity information."
+  echo ""
+  echo "The script takes no arguments. To run the script, simply type './ebs_capacity_monitor.sh'"
+  exit 0
+fi
 
 alert_threshold=75
 
