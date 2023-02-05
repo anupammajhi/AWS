@@ -21,3 +21,4 @@ fi
 
 stackset_name=$1
 
+response=$(aws cloudformation list-stack-instances --stack-set-name "$stackset_name")
