@@ -22,3 +22,10 @@ fi
 stackset_name=$1
 
 response=$(aws cloudformation list-stack-instances --stack-set-name "$stackset_name")
+
+if [ -z "$response" ]; then
+    printf "No stack instances found for stackset %s\n" "$stackset_name"
+    printf "Proceeding deletion of stackset: %s\n" "$stackset_name"
+    aws cloudformation delete-stack-set --stack-set-name "$stackset_name"
+    exit
+fi
