@@ -29,3 +29,4 @@ if [ -z "$response" ]; then
     aws cloudformation delete-stack-set --stack-set-name "$stackset_name"
     exit
 fi
+
