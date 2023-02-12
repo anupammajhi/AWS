@@ -12,3 +12,4 @@ if [[ ! "${allowed_values[@]}" =~ (^|[[:space:]])"$1"($|[[:space:]]) ]]; then
     echo "Invalid retention value. Please choose one of the allowed values: ${allowed_values[@]}"
     exit 1
 fi
+
