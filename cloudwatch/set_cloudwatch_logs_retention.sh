@@ -18,3 +18,4 @@ if [[ $1 == "help" || $1 == "h" || $1 == "--help" ]]; then
     echo "Set a retention in days for all your CloudWatch Logs in a single region."
     echo "Possible retention values: 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 3653"
     exit 0
+fi
