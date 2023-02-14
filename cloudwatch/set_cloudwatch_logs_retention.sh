@@ -21,3 +21,4 @@ if [[ $1 == "help" || $1 == "h" || $1 == "--help" ]]; then
 fi
 
 retention=$1
+echo "Setting CloudWatch Logs Retention Policy to $retention days for all log groups in the region."
