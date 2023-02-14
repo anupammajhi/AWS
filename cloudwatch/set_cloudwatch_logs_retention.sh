@@ -22,3 +22,10 @@ fi
 
 retention=$1
 echo "Setting CloudWatch Logs Retention Policy to $retention days for all log groups in the region."
+
+# Check if the log group exists before setting the retention policy
+if aws logs describe-log-groups --log-group-name /aws/lambda/* --query 'logGroups[].logGroupName' --output text | grep -q '/aws/lambda/'; then
+    aws logs put-retention-policy --log-group-name /aws/lambda/* --retention-in-days $retention
+else
+    echo "Log group does not exist"
+fi
