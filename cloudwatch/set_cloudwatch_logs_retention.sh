@@ -29,3 +29,4 @@ if aws logs describe-log-groups --log-group-name /aws/lambda/* --query 'logGroup
 else
     echo "Log group does not exist"
 fi
+
