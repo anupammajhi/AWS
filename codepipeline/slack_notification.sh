@@ -19,9 +19,3 @@ get_previous_pipeline_execution() {
     is_next=false
 
     for item in $pipeline_executions; do
-        status=$(echo $item | jq -r '.status')
-        if $is_next && ([ "$status" == "Succeeded" ] || [ "$status" == "Failed" ]); then
-            echo $item
-            return
-        fi
-        pipelineExecutionId=$(echo $item | jq -r '.pipelineExecutionId')
