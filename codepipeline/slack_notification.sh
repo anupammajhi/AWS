@@ -50,3 +50,33 @@ get_blocks_for_failed() {
     if [ "$3" != "FAILED" ]; then
         echo "[]"
         return
+    fi
+
+    action_executions=$(aws codepipeline list-action-executions --pipeline-name $1 --filter pipelineExecutionId=$2 | jq '.actionExecutionDetails')
+
+    result=()
+
+    for action_execution in $action_executions; do
+        status=$(echo $action_execution | jq -r '.status')
+        if [ "$status" == "Failed" ]; then
+            stage=$(echo $action_execution | jq -r '.stageName')
+            action=$(echo $action_execution | jq -r '.actionName')
+            summary=$(echo $action_execution | jq -r '.output.executionResult.externalExecutionSummary')
+            result+=("{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"${stage}.${action} failed:\\n\\`${summary}\\n\\`\"}}")
+        fi
+    done
+
+    echo "${result[@]}"
+}
+
+handler() {
+    event=$1
+    account="${event["account"]}"
+    region="${event["region"]}"
+    pipeline_name="${event["detail"]["pipeline"]}"
+    state="${event["detail"]["state"]}"
+    execution_id="${event["detail"]["execution-id"]}"
+
+    previous_pipeline_execution=$(get_previous_pipeline_execution $pipeline_name $execution_id)
+
+    previous_failed=false
