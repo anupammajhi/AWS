@@ -76,7 +76,3 @@ handler() {
     pipeline_name="${event["detail"]["pipeline"]}"
     state="${event["detail"]["state"]}"
     execution_id="${event["detail"]["execution-id"]}"
-
-    previous_pipeline_execution=$(get_previous_pipeline_execution $pipeline_name $execution_id)
-
-    previous_failed=false
