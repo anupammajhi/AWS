@@ -76,3 +76,29 @@ handler() {
     pipeline_name="${event["detail"]["pipeline"]}"
     state="${event["detail"]["state"]}"
     execution_id="${event["detail"]["execution-id"]}"
+
+    previous_pipeline_execution=$(get_previous_pipeline_execution $pipeline_name $execution_id)
+
+    previous_failed=false
+    if [ "$previous_pipeline_execution" != "null" ] && [ "$(echo $previous_pipeline_execution | jq -r '.status')" == "Failed" ]; then
+        previous_failed=true
+    fi
+
+    if [ "$state" == "SUCCEEDED" ] && [ "$ALWAYS_SHOW_SUCCEEDED" == "false" ] && [ "$previous_pipeline_execution" != "null" ] && [ "$previous_failed" == false ]; then
+        echo "Ignoring succeeded event"
+        return
+    fi
+
+    emoji_prefix=""
+    if [ "$state" == "FAILED" ]; then
+        emoji_prefix=":x: "
+    elif [ "$state" == "SUCCEEDED" ]; then
+        emoji_prefix=":white_check_mark: "
+    fi
+
+    pipeline_url="https://${region}.console.aws.amazon.com/codesuite/codepipeline/pipelines/$(echo $pipeline_name | jq -r @uri)/view"
+    execution_url="https://${region}.console.aws.amazon.com/codesuite/codepipeline/pipelines/$(echo $pipeline_name | jq -r @uri)/executions/${execution_id}/timeline"
+
+    state_text="$state"
+    if [ "$previous_failed" == true ] && [ "$state" == "SUCCEEDED" ]; then
+        state_text="${state_text} (previously failed)"
