@@ -110,9 +110,3 @@ handler() {
     if [ -n "$ACCOUNT_DESC" ]; then
         account_text="${account_text} (${ACCOUNT_DESC})"
     fi
-
-    blocks=("{\"type\": \"section\",\"text\": {\"type\": \"mrkdwn\",\"text\": \"${emoji_prefix}Pipeline <${pipeline_url}|${pipeline_name}> *${state_text}*\\n${region} | ${account_text}\\n<${execution_url}|Execution details>\"}}")
-    if [ "${#blocks_for_failed[@]}" -gt 0 ]; then
-        blocks+=($blocks_for_failed)
-    fi
-
