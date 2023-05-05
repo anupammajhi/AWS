@@ -12,3 +12,14 @@ help_document() {
 if [[ $1 == "help" || $1 == "h" || $1 == "--help" ]]; then
     help_document
 fi
+
+get_inactive_task_definition_arns() {
+    client=boto3.client("ecs", region_name="$1")
+    arns=()
+    paginator=client.get_paginator("list_task_definitions")
+    for page in paginator.paginate(status="INACTIVE"); do
+        arns+=($(echo $page | jq -r '.taskDefinitionArns[]'))
+    done
+    echo "${arns[@]}"
+}
+
