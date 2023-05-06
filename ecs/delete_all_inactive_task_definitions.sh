@@ -40,3 +40,4 @@ delete_inactive_task_definitions_in_region() {
         echo "No inactive task definitions found in region $1"
     else
         for arn in "${arns[@]}"; do
+            delete_task_definition "$1" "$arn"
