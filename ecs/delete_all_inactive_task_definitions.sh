@@ -23,3 +23,18 @@ get_inactive_task_definition_arns() {
     echo "${arns[@]}"
 }
 
+delete_task_definition() {
+    client=boto3.client("ecs", region_name="$1")
+    max_retries=5
+    backoff=1
+    for attempt in $(seq 1 $max_retries); do
+        client.delete_task_definitions(taskDefinitions="$2")
+        echo "Deleted task definition $2"
+        break
+    done
+}
+
+delete_inactive_task_definitions_in_region() {
+    arns=($(get_inactive_task_definition_arns "$1"))
+    if [ ${#arns[@]} -eq 0 ]; then
+        echo "No inactive task definitions found in region $1"
