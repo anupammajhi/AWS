@@ -56,3 +56,4 @@ if [ $# -gt 1 ]; then
     help_document
 elif [ $# -eq 1 ]; then
     delete_inactive_task_definitions_in_region "$1"
+else
