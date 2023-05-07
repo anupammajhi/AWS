@@ -41,3 +41,4 @@ delete_inactive_task_definitions_in_region() {
     else
         for arn in "${arns[@]}"; do
             delete_task_definition "$1" "$arn"
+        done
