@@ -42,3 +42,16 @@ delete_inactive_task_definitions_in_region() {
         for arn in "${arns[@]}"; do
             delete_task_definition "$1" "$arn"
         done
+    fi
+}
+
+delete_inactive_task_definitions_in_all_regions() {
+    ecs_regions=($(boto3.session.Session().get_available_regions("ecs")))
+    for region in "${ecs_regions[@]}"; do
+        delete_inactive_task_definitions_in_region "$region"
+    done
+}
+
+if [ $# -gt 1 ]; then
+    help_document
+elif [ $# -eq 1 ]; then
