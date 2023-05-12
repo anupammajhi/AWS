@@ -39,3 +39,27 @@ if ! command -v docker &>/dev/null; then
     exit
 fi
 
+while [ "$1" != "" ]; do
+    case $1 in
+    -p | --profile)
+        shift
+        AWS_PROFILE="$1"
+        ;;
+    -d | --dockerfile)
+        shift
+        DOCKER_FILE="$1"
+        ;;
+    -e | --ecr-url)
+        shift
+        ECR_URL="$1"
+        ;;
+    -t | --tag)
+        shift
+        TAG="$1"
+        ;;
+    -h | --help)
+        shift
+        usage
+        exit
+        ;;
+    esac
