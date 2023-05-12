@@ -18,3 +18,24 @@ been configured in the local shell, at least the default profile.
 Usage
 -----
 ./ecs_publish_ecr_image.sh --ecr-url ecr_repo_url [--dockerfile /path/to/dockerfile] [--profile <aws_profile>] [--tag <docker_image_tag>] [--help]
+
+A short version of the commands is also available:
+./ecs_publish_ecr_image.sh -e ecr_repo_url [-d /path/to/dockerfile] [-p <aws_profile>] [-t <docker_image_tag>] [-h]
+
+Arguments
+---------
+The required --ecr-url argument takes a URL of valid repository in the AWS container registry (ECR)
+
+The optional --dockerfile argument takes a path to a valid Dockerfile which can be used to build the Docker image
+to send to AWS container registry.
+
+The optional --profile argument takes as input an AWS CLI profile stored locally (see ~/.aws/config to see the
+profiles currently available in your machine)
+EOF
+}
+
+if ! command -v docker &>/dev/null; then
+    echo "This script requires Docker to be installed and available in the shell PATH!"
+    exit
+fi
+
