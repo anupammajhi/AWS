@@ -59,7 +59,3 @@ while [ "$1" != "" ]; do
         ;;
     -h | --help)
         shift
-        usage
-        exit
-        ;;
-    esac
