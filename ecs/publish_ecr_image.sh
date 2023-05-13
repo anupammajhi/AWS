@@ -53,3 +53,20 @@ while [ "$1" != "" ]; do
         shift
         ECR_URL="$1"
         ;;
+    -t | --tag)
+        shift
+        TAG="$1"
+        ;;
+    -h | --help)
+        shift
+        usage
+        exit
+        ;;
+    esac
+    shift
+done
+
+echo $ECR_URL
+
+if [ -z $ECR_URL ]; then
+    usage
