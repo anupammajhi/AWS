@@ -70,3 +70,9 @@ echo $ECR_URL
 
 if [ -z $ECR_URL ]; then
     usage
+    exit
+fi
+
+echo "Chosen AWS profile: $AWS_PROFILE"
+echo "Chosen ECR repository address: $ECR_URL"
+echo "Chosen Dockerfile to use for building the image: $DOCKER_FILE"
