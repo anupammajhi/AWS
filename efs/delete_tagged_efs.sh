@@ -21,3 +21,16 @@ function find_efs_filesystems {
 
     filtered_filesystems=""
     for fs in $(echo "$response" | jq -r '.FileSystems[]'); do
+        tags=$(echo "$fs" | jq -r '.Tags[]?')
+        if [ ! -z "$tags" ]; then
+            key=$(echo "$tags" | jq -r '.Key')
+            value=$(echo "$tags" | jq -r '.Value')
+            if [ "$key" == "$tag_key" ] && [[ "$value" == *"$tag_value_contains"* ]]; then
+                filtered_filesystems="$filtered_filesystems $fs"
+            fi
+        fi
+    done
+
+    echo "$filtered_filesystems"
+}
+
