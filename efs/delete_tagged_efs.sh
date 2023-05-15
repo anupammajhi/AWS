@@ -34,3 +34,4 @@ function find_efs_filesystems {
     echo "$filtered_filesystems"
 }
 
+function delete_mount_targets {
