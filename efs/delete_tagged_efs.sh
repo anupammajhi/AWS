@@ -60,3 +60,5 @@ function delete_efs_filesystem {
         sleep $delay
 
         eval "$efs_client delete-file-system --file-system-id $filesystem_id"
+        echo "Deleted EFS Filesystem: $filesystem_id"
+        break
