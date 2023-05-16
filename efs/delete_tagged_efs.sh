@@ -37,3 +37,14 @@ function find_efs_filesystems {
 function delete_mount_targets {
     efs_client="aws efs"
     filesystem_id=$1
+    response=$(eval "$efs_client describe-mount-targets --file-system-id $filesystem_id")
+
+    for mt in $(echo "$response" | jq -r '.MountTargets[]'); do
+        mount_target_id=$(echo "$mt" | jq -r '.MountTargetId')
+        eval "$efs_client delete-mount-target --mount-target-id $mount_target_id"
+        echo "Deleted Mount Target: $mount_target_id"
+    done
+}
+
+function delete_efs_filesystem {
+    efs_client="aws efs"
