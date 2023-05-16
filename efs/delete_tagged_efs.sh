@@ -35,3 +35,4 @@ function find_efs_filesystems {
 }
 
 function delete_mount_targets {
+    efs_client="aws efs"
