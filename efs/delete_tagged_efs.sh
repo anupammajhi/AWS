@@ -48,3 +48,4 @@ function delete_mount_targets {
 
 function delete_efs_filesystem {
     efs_client="aws efs"
+    filesystem_id=$1
