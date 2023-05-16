@@ -49,3 +49,14 @@ function delete_mount_targets {
 function delete_efs_filesystem {
     efs_client="aws efs"
     filesystem_id=$1
+    max_retries=5
+    current_retry=0
+
+    while [ "$current_retry" -lt "$max_retries" ]; do
+        delete_mount_targets "$filesystem_id"
+
+        delay=$((2**current_retry + RANDOM))
+        echo "Waiting for $delay seconds before attempting to delete the EFS filesystem."
+        sleep $delay
+
+        eval "$efs_client delete-file-system --file-system-id $filesystem_id"
