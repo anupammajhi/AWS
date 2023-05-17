@@ -11,5 +11,3 @@ fi
 
 aws_profile="default"
 region="us-west-1"
-
-used_SG=()
