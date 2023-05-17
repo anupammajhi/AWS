@@ -63,3 +63,4 @@ function delete_efs_filesystem {
         echo "Deleted EFS Filesystem: $filesystem_id"
         break
     done
+}
