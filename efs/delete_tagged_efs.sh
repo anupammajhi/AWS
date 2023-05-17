@@ -64,3 +64,8 @@ function delete_efs_filesystem {
         break
     done
 }
+
+efs_filesystems=$(find_efs_filesystems)
+
+for fs in $efs_filesystems; do
+    filesystem_id=$(echo "$fs" | jq -r '.FileSystemId')
