@@ -20,5 +20,3 @@ for sg in $(echo $response | jq -r '.Reservations[].Instances[].SecurityGroups[]
     used_SG+=($sg)
 done
 
-# Find Classic load balancer security group in use
-response=$(aws elb describe-load-balancers --profile $aws_profile --region $region)
