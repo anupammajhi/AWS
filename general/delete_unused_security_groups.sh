@@ -51,3 +51,11 @@ echo "Total Security Groups: ${#total_SG[@]}"
 echo "Used Security Groups: ${#used_SG[@]}"
 echo
 echo "Unused Security Groups: ${#unused_SG[@]} compiled in the following list:"
+echo "${unused_SG[@]}"
+echo
+
+# Delete unused security groups, except those containing "default" in the name
+for sg_id in "${unused_SG[@]}"; do
+    sg_name=$(aws ec2 describe-security-groups --group-ids $sg_id --profile $aws_profile --region $region | jq -r '.SecurityGroups[0].GroupName')
+
+    if [[ $sg_name == *"default"* ]]; then
