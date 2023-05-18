@@ -38,3 +38,18 @@ for sg in $(echo $response | jq -r '.DBInstances[].VpcSecurityGroups[].VpcSecuri
     used_SG+=($sg)
 done
 
+total_SG=($(aws ec2 describe-security-groups --profile $aws_profile --region $region | jq -r '.SecurityGroups[].GroupId'))
+unused_SG=()
+
+for sg in "${total_SG[@]}"; do
+    if [[ ! " ${used_SG[@]} " =~ " $sg " ]]; then
+        unused_SG+=($sg)
+    fi
+done
+
+echo "Total Security Groups: ${#total_SG[@]}"
+echo "Used Security Groups: ${#used_SG[@]}"
+echo
+echo "Unused Security Groups: ${#unused_SG[@]} compiled in the following list:"
+echo "${unused_SG[@]}"
+echo
