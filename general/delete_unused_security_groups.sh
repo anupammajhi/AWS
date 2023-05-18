@@ -20,3 +20,21 @@ for sg in $(echo $response | jq -r '.Reservations[].Instances[].SecurityGroups[]
     used_SG+=($sg)
 done
 
+# Find Classic load balancer security group in use
+response=$(aws elb describe-load-balancers --profile $aws_profile --region $region)
+for sg in $(echo $response | jq -r '.LoadBalancerDescriptions[].SecurityGroups[]'); do
+    used_SG+=($sg)
+done
+
+# Find Application load balancer security group in use
+response=$(aws elbv2 describe-load-balancers --profile $aws_profile --region $region)
+for sg in $(echo $response | jq -r '.LoadBalancers[].SecurityGroups[]'); do
+    used_SG+=($sg)
+done
+
+# Find RDS db security group in use
+response=$(aws rds describe-db-instances --profile $aws_profile --region $region)
+for sg in $(echo $response | jq -r '.DBInstances[].VpcSecurityGroups[].VpcSecurityGroupId'); do
+    used_SG+=($sg)
+done
+
