@@ -51,5 +51,3 @@ echo "Total Security Groups: ${#total_SG[@]}"
 echo "Used Security Groups: ${#used_SG[@]}"
 echo
 echo "Unused Security Groups: ${#unused_SG[@]} compiled in the following list:"
-echo "${unused_SG[@]}"
-echo
