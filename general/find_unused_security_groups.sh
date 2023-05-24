@@ -14,3 +14,18 @@ used_SG=()
 
 for instance in $(echo "$ec2" | jq -r '.Reservations[].Instances[]'); do
     for sg in $(echo "$instance" | jq -r '.SecurityGroups[].GroupId'); do
+        used_SG+=("$sg")
+    done
+done
+
+for lb in $(echo "$elb" | jq -r '.LoadBalancerDescriptions[].SecurityGroups[]'); do
+    used_SG+=("$lb")
+done
+
+for lb in $(echo "$elbv2" | jq -r '.LoadBalancers[].SecurityGroups[]'); do
+    used_SG+=("$lb")
+done
+
+for instance in $(echo "$rds" | jq -r '.DBInstances[]'); do
+    for sg in $(echo "$instance" | jq -r '.VpcSecurityGroups[].VpcSecurityGroupId'); do
+        used_SG+=("$sg")
