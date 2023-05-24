@@ -14,7 +14,3 @@ used_SG=()
 
 for instance in $(echo "$ec2" | jq -r '.Reservations[].Instances[]'); do
     for sg in $(echo "$instance" | jq -r '.SecurityGroups[].GroupId'); do
-        used_SG+=("$sg")
-    done
-done
-
