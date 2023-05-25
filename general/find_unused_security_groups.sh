@@ -23,6 +23,3 @@ for lb in $(echo "$elb" | jq -r '.LoadBalancerDescriptions[].SecurityGroups[]');
 done
 
 for lb in $(echo "$elbv2" | jq -r '.LoadBalancers[].SecurityGroups[]'); do
-    used_SG+=("$lb")
-done
-
