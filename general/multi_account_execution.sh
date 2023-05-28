@@ -18,3 +18,4 @@ role_arn_to_session() {
     aws configure set aws_session_token $session_token
 }
 
+set_boto3_clients() {
