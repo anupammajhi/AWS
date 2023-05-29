@@ -19,3 +19,4 @@ role_arn_to_session() {
 }
 
 set_boto3_clients() {
+    role_arn_to_session --role-arn "arn:aws:iam::$1:role/your-rolename-to-assume" --role-session-name "your-rolename-to-assume"
