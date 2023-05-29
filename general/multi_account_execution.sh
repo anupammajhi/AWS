@@ -20,3 +20,12 @@ role_arn_to_session() {
 
 set_boto3_clients() {
     role_arn_to_session --role-arn "arn:aws:iam::$1:role/your-rolename-to-assume" --role-session-name "your-rolename-to-assume"
+}
+
+delete_awsconfig_rule_evaluations() {
+    aws configservice delete-evaluation-results --config-rule-name "SHIELD_002"
+}
+
+lambda_handler() {
+    for account_id in "${aws_account_list[@]}"; do
+        set_boto3_clients $account_id
