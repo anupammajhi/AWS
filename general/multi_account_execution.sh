@@ -31,3 +31,4 @@ lambda_handler() {
         set_boto3_clients $account_id
         awsconfig=$(aws configure get role_arn)
         delete_awsconfig_rule_evaluations $awsconfig
+    done
