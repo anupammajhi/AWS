@@ -33,3 +33,9 @@ lambda_handler() {
         delete_awsconfig_rule_evaluations $awsconfig
     done
 }
+
+aws_account_list=("111111111111" "222222222222" "333333333333")
+
+lambda_handler
+
+
