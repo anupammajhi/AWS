@@ -32,3 +32,4 @@ lambda_handler() {
         awsconfig=$(aws configure get role_arn)
         delete_awsconfig_rule_evaluations $awsconfig
     done
+}
