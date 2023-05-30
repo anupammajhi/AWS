@@ -30,3 +30,4 @@ lambda_handler() {
     for account_id in "${aws_account_list[@]}"; do
         set_boto3_clients $account_id
         awsconfig=$(aws configure get role_arn)
+        delete_awsconfig_rule_evaluations $awsconfig
