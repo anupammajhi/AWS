@@ -8,5 +8,3 @@ help_document() {
     exit 1
 }
 
-if [ "$1" == "help" ] || [ "$1" == "h" ] || [ "$1" == "--help" ]; then
-    help_document
