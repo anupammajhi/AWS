@@ -25,3 +25,11 @@ delete_signing_certificates() {
 }
 
 delete_login_profile() {
+    aws iam delete-login-profile --user-name $username &> /dev/null
+    if [ $? -eq 0 ]; then
+        echo "Login profile deleted."
+    else
+        echo "No login profile found."
+    fi
+}
+
