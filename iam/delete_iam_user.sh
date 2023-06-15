@@ -14,4 +14,3 @@ delete_access_keys() {
     response=$(aws iam list-access-keys --user-name $username)
     for access_key in $(echo $response | jq -r ".AccessKeyMetadata[] | .AccessKeyId"); do
         aws iam delete-access-key --user-name $username --access-key-id $access_key
-    done
