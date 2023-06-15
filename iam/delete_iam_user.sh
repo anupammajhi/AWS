@@ -14,3 +14,14 @@ delete_access_keys() {
     response=$(aws iam list-access-keys --user-name $username)
     for access_key in $(echo $response | jq -r ".AccessKeyMetadata[] | .AccessKeyId"); do
         aws iam delete-access-key --user-name $username --access-key-id $access_key
+    done
+}
+
+delete_signing_certificates() {
+    response=$(aws iam list-signing-certificates --user-name $username)
+    for certificate_id in $(echo $response | jq -r ".Certificates[] | .CertificateId"); do
+        aws iam delete-signing-certificate --user-name $username --certificate-id $certificate_id
+    done
+}
+
+delete_login_profile() {
