@@ -32,4 +32,3 @@ delete_login_profile() {
         echo "No login profile found."
     fi
 }
-
