@@ -32,3 +32,12 @@ delete_login_profile() {
         echo "No login profile found."
     fi
 }
+
+delete_mfa_devices() {
+    response=$(aws iam list-mfa-devices --user-name $username)
+    for serial_number in $(echo $response | jq -r ".MFADevices[] | .SerialNumber"); do
+        aws iam deactivate-mfa-device --user-name $username --serial-number $serial_number
+    done
+}
+
+delete_access_keys
