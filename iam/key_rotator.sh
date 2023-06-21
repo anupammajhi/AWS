@@ -59,11 +59,3 @@ disable_key() {
     if [ "$answer" == "y" ]; then
         $iam_client iam update-access-key --user-name "$username" --access-key-id "$1" --status Inactive
         echo "$1 has been disabled."
-    else
-        echo "Aborting."
-    fi
-}
-
-delete_key() {
-    read -p "Do you want to delete the access key $1? [y/N] " answer
-    if [ "$answer" == "y" ]; then
