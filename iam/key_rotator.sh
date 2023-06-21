@@ -40,11 +40,3 @@ while getopts ":u:k:-:" opt; do
             ;;
     esac
 done
-
-create_key() {
-    keys=$($iam_client iam list-access-keys --user-name "$1" | jq -r '.AccessKeyMetadata')
-    key_count=$(echo "$keys" | jq length)
-    if [ "$key_count" -ge 2 ]; then
-        echo "$1 already has 2 keys. You must delete a key before you can create another key."
-        return
-    fi
