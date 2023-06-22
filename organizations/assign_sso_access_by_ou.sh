@@ -30,12 +30,3 @@ get_accounts_in_ou() {
     root_id=$(aws organizations list-roots | jq -r '.Roots[0].Id')
     ou_id=$(aws organizations list-organizational-units-for-parent --parent-id $root_id | jq -r --arg ou "$OU_NAME" '.OrganizationalUnits[] | select(.Name == $ou) | .Id')
     if [[ -z $ou_id ]]; then
-        echo "Organizational Unit not found: $OU_NAME"
-        exit 1
-    fi
-    accounts=$(aws organizations list-accounts-for-parent --parent-id $ou_id | jq -r '.Accounts[].Id')
-    echo $accounts
-}
-
-# Get the principal ID for the specified principal name and type
-get_principal_id() {
