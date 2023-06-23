@@ -71,3 +71,19 @@ get_permission_set_arn() {
 # Assign access to the principal for each account in the OU
 assign_access_to_principal() {
     instance_arn=$1
+    principal_id=$2
+    account_id=$3
+    permission_set_arn=$4
+    aws sso-admin create-account-assignment --instance-arn $instance_arn --target-id $account_id --target-type "AWS_ACCOUNT" --principal-type $PRINCIPAL_TYPE --principal-id $principal_id --permission-set-arn $permission_set_arn
+    echo "Assigned $PRINCIPAL_TYPE $PRINCIPAL_NAME with Permission Set $PERMISSION_SET_NAME in AWS Account $account_id"
+}
+
+main() {
+    read instance_arn identity_store_id < <(get_instance_information)
+    principal_id=$(get_principal_id $identity_store_id $PRINCIPAL_NAME $PRINCIPAL_TYPE)
+    permission_set_arn=$(get_permission_set_arn $instance_arn $PERMISSION_SET_NAME)
+    account_ids=$(get_accounts_in_ou)
+    for account_id in $account_ids; do
+        assign_access_to_principal $instance_arn $principal_id $account_id $permission_set_arn
+    done
+}
