@@ -50,7 +50,3 @@ find_group() {
         fi
     done
     echo ""
-}
-
-# Function to create a group based on group name
-create_group() {
