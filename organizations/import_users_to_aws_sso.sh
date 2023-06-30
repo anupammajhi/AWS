@@ -1,0 +1,30 @@
+﻿
+#!/bin/bash
+## Author: Anupam Majhi
+## Github: https://github.com/anupammajhi/AWS
+
+# Help document function
+if [[ $1 == "help" || $1 == "h" || $1 == "--help" ]]; then
+    echo "Usage: ./script.sh <csv_file>"
+    echo "Import users from a CSV file to AWS SSO"
+    exit
+fi
+
+# Add your AWS credentials here if needed
+export AWS_ACCESS_KEY_ID="your_access_key_id"
+export AWS_SECRET_ACCESS_KEY="your_secret_access_key"
+export AWS_DEFAULT_REGION="your_aws_region"
+
+# Create boto3 clients
+sso_admin_client="boto3.client('sso-admin')"
+identitystore_client="boto3.client('identitystore')"
+
+# Function to get Identity Store information
+get_instance_information() {
+    response=$($sso_admin_client list_instances)
+    if [[ -z $(echo $response | jq -r '.Instances') ]]; then
+        echo "No SSO instances found"
+        exit 1
+    fi
+    instance_info=$(echo $response | jq -r '.Instances[0].IdentityStoreId')
+    echo $instance_info
