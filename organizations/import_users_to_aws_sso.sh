@@ -28,3 +28,29 @@ get_instance_information() {
     fi
     instance_info=$(echo $response | jq -r '.Instances[0].IdentityStoreId')
     echo $instance_info
+}
+
+# Function to find a group based on group name
+find_group() {
+    identity_store_id=$1
+    group_name=$2
+    next_token=""
+    while true; do
+        response=$(identitystore_client list_groups --IdentityStoreId $identity_store_id --NextToken $next_token)
+        for group in $(echo $response | jq -c '.Groups[]'); do
+            if [[ $(echo $group | jq -r '.DisplayName') == "$group_name" ]]; then
+                group_id=$(echo $group | jq -r '.GroupId')
+                echo $group_id
+                return
+            fi
+        done
+        next_token=$(echo $response | jq -r '.NextToken')
+        if [[ -z $next_token ]]; then
+            break
+        fi
+    done
+    echo ""
+}
+
+# Function to create a group based on group name
+create_group() {
