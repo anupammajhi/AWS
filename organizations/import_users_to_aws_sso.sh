@@ -40,8 +40,3 @@ find_group() {
         for group in $(echo $response | jq -c '.Groups[]'); do
             if [[ $(echo $group | jq -r '.DisplayName') == "$group_name" ]]; then
                 group_id=$(echo $group | jq -r '.GroupId')
-                echo $group_id
-                return
-            fi
-        done
-        next_token=$(echo $response | jq -r '.NextToken')
