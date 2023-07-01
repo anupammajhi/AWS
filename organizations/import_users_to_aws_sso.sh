@@ -45,8 +45,3 @@ find_group() {
             fi
         done
         next_token=$(echo $response | jq -r '.NextToken')
-        if [[ -z $next_token ]]; then
-            break
-        fi
-    done
-    echo ""
