@@ -66,3 +66,29 @@ create_group_if_not_exists() {
     group_id=$(find_group $1 $2)
     if [[ -z $group_id ]]; then
         group_id=$(create_group $1 $2)
+    fi
+    echo $group_id
+}
+
+# Function to create a user based on first name, last name, and email
+create_user() {
+    identity_store_id=$1
+    first_name=$2
+    last_name=$3
+    email=$4
+    user_id=$(find_user_by_email $identity_store_id $email)
+
+    if [[ -n $user_id ]]; then
+        echo "User $email already exists."
+        echo $user_id
+        return
+    fi
+
+    response=$(identitystore_client create_user --IdentityStoreId $identity_store_id --UserName $email --Name "{\"Formatted\": \"$first_name $last_name\", \"FamilyName\": \"$last_name\", \"GivenName\": \"$first_name\"}" --DisplayName "$first_name $last_name" --Emails "[{\"Value\": \"$email\", \"Type\": \"Work\", \"Primary\": true}]")
+    user_id=$(echo $response | jq -r '.UserId')
+    echo "Created user $email"
+    echo $user_id
+}
+
+# Function to create a user based on first name, last name, and email
+find_user_by_email() {
