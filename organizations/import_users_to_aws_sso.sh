@@ -40,3 +40,29 @@ find_group() {
         for group in $(echo $response | jq -c '.Groups[]'); do
             if [[ $(echo $group | jq -r '.DisplayName') == "$group_name" ]]; then
                 group_id=$(echo $group | jq -r '.GroupId')
+                echo $group_id
+                return
+            fi
+        done
+        next_token=$(echo $response | jq -r '.NextToken')
+        if [[ -z $next_token ]]; then
+            break
+        fi
+    done
+    echo ""
+}
+
+# Function to create a group based on group name
+create_group() {
+    identity_store_id=$1
+    group_name=$2
+    group=$(identitystore_client create_group --IdentityStoreId $identity_store_id --DisplayName $group_name)
+    echo "Group $group_name created"
+    echo $(echo $group | jq -r '.GroupId')
+}
+
+# Function to create a group if it doesn't exist
+create_group_if_not_exists() {
+    group_id=$(find_group $1 $2)
+    if [[ -z $group_id ]]; then
+        group_id=$(create_group $1 $2)
