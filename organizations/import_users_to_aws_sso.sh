@@ -108,7 +108,3 @@ find_user_by_email() {
 add_user_to_group() {
     identity_store_id=$1
     user_id=$2
-    group_id=$3
-    email=$4
-    group_name=$5
-    identitystore_client create_group_membership --IdentityStoreId $identity_store_id --GroupId $group_id --MemberId "{\"UserId\": \"$user_id\"}"
