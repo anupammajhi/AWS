@@ -88,7 +88,3 @@ create_user() {
     user_id=$(echo $response | jq -r '.UserId')
     echo "Created user $email"
     echo $user_id
-}
-
-# Function to create a user based on first name, last name, and email
-find_user_by_email() {
