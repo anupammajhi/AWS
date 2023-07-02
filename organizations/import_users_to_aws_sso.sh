@@ -112,8 +112,3 @@ add_user_to_group() {
     email=$4
     group_name=$5
     identitystore_client create_group_membership --IdentityStoreId $identity_store_id --GroupId $group_id --MemberId "{\"UserId\": \"$user_id\"}"
-    echo "Added user $email to group $group_name"
-}
-
-# Main function
-main() {
