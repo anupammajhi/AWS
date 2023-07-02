@@ -88,3 +88,32 @@ create_user() {
     user_id=$(echo $response | jq -r '.UserId')
     echo "Created user $email"
     echo $user_id
+}
+
+# Function to create a user based on first name, last name, and email
+find_user_by_email() {
+    identity_store_id=$1
+    email=$2
+    response=$(identitystore_client list_users --IdentityStoreId $identity_store_id --Filters "[{\"AttributePath\": \"UserName\", \"AttributeValue\": \"$email\"}]")
+
+    if [[ -n $(echo $response | jq -r '.Users') ]]; then
+        user_id=$(echo $response | jq -r '.Users[0].UserId')
+        echo $user_id
+    else
+        echo ""
+    fi
+}
+
+# Function to add a user to a group
+add_user_to_group() {
+    identity_store_id=$1
+    user_id=$2
+    group_id=$3
+    email=$4
+    group_name=$5
+    identitystore_client create_group_membership --IdentityStoreId $identity_store_id --GroupId $group_id --MemberId "{\"UserId\": \"$user_id\"}"
+    echo "Added user $email to group $group_name"
+}
+
+# Main function
+main() {
