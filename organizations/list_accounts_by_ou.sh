@@ -22,3 +22,16 @@ if [[ -z $ou_names ]]; then
     # If no OU names are provided, list all accounts in the organization
     accounts=$(aws organizations list_accounts --output json --query 'Accounts')
 
+    echo "Found the following accounts for the organization:"
+    echo
+
+    for account in $(echo $accounts | jq -c '.[]'); do
+        account_id=$(echo $account | jq -r '.Id')
+        account_alias=$(echo $account | jq -r '.Alias // .Name')
+        ou_name=$(get_ou_for_account $account_id $root_id)
+        echo "Account ID: $account_id, Account Alias/Name: $account_alias, Organizational Unit: $ou_name"
+    done
+else
+    # Iterate through the list of OU names and get the ID of each OU
+    ou_ids=()
+
