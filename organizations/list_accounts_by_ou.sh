@@ -22,6 +22,3 @@ if [[ -z $ou_names ]]; then
     # If no OU names are provided, list all accounts in the organization
     accounts=$(aws organizations list_accounts --output json --query 'Accounts')
 
-    echo "Found the following accounts for the organization:"
-    echo
-
