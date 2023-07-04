@@ -12,3 +12,16 @@ fi
 
 ou_names=("$@")  # Get the list of organizational unit names from command-line arguments
 
+# Create an AWS Organizations client
+organizations=$(aws organizations)
+
+# Call the list_roots method to get a list of roots in the organization
+root_id=$(aws organizations list_roots --output text --query 'Roots[0].Id')
+
+if [[ -z $ou_names ]]; then
+    # If no OU names are provided, list all accounts in the organization
+    accounts=$(aws organizations list_accounts --output json --query 'Accounts')
+
+    echo "Found the following accounts for the organization:"
+    echo
+
