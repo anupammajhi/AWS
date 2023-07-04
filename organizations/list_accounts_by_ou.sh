@@ -35,3 +35,17 @@ else
     # Iterate through the list of OU names and get the ID of each OU
     ou_ids=()
 
+    for ou_name in "${ou_names[@]}"; do
+        ou_id=$(aws organizations list_organizational_units_for_parent --parent-id $root_id --output text --query "OrganizationalUnits[?Name=='$ou_name'].Id" | head -n 1)
+        ou_ids+=($ou_id)
+    done
+
+    accounts=()
+
+    for parent_id in "${ou_ids[@]}"; do
+        response=$(aws organizations list_accounts_for_parent --parent-id $parent_id --output json --query 'Accounts')
+        accounts+=($(echo $response | jq -c '.[]'))
+    done
+
+    echo "Found the following accounts for organizational units: ${ou_names[@]}"
+    echo
