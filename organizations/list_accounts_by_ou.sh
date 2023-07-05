@@ -48,6 +48,3 @@ else
     done
 
     echo "Found the following accounts for organizational units: ${ou_names[@]}"
-    echo
-
-    for account in "${accounts[@]}"; do
