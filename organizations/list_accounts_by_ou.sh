@@ -41,3 +41,13 @@ else
     done
 
     accounts=()
+
+    for parent_id in "${ou_ids[@]}"; do
+        response=$(aws organizations list_accounts_for_parent --parent-id $parent_id --output json --query 'Accounts')
+        accounts+=($(echo $response | jq -c '.[]'))
+    done
+
+    echo "Found the following accounts for organizational units: ${ou_names[@]}"
+    echo
+
+    for account in "${accounts[@]}"; do
