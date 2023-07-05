@@ -47,5 +47,3 @@ else
         accounts+=($(echo $response | jq -c '.[]'))
     done
 
-    echo "Found the following accounts for organizational units: ${ou_names[@]}"
-    echo
