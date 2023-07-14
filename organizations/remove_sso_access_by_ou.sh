@@ -6,5 +6,3 @@
 if [ "$1" == "help" ] || [ "$1" == "h" ] || [ "$1" == "--help" ]; then
     echo "Usage: $0 [OU_NAME]"
     exit
-fi
-
