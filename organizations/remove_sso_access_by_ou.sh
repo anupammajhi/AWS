@@ -20,3 +20,13 @@ get_instance_information() {
     echo "$instance_arn $identity_store_id"
 }
 
+get_accounts_in_ou() {
+    root_id=$(aws organizations list-roots | jq -r '.Roots[0].Id')
+    ou_id=$(aws organizations list-organizational-units-for-parent --parent-id $root_id | jq -r --arg ouName "$1" '.OrganizationalUnits[] | select(.Name == $ouName) | .Id')
+    accounts=($(aws organizations list-accounts-for-parent --parent-id $ou_id | jq -r '.Accounts[].Id'))
+    echo "${accounts[@]}"
+}
+
+get_principal_id() {
+    response=$(aws identitystore list-$(echo $2 | tr '[:upper:]' '[:lower:]')s --identity-store-id $1 --filters "UserName=$3" | jq -r '.Users[0].UserId // .Groups[0].GroupId')
+    echo "$response"
