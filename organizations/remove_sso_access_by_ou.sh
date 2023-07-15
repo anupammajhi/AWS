@@ -37,6 +37,3 @@ get_permission_set_arn() {
         name=$(aws sso-admin describe-permission-set --instance-arn $1 --permission-set-arn $arn | jq -r '.PermissionSet.Name')
         [ "$name" == "$2" ] && echo "$arn" && break
     done)
-    echo "$permission_set_arn"
-}
-
