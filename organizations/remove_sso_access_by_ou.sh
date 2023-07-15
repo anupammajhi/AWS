@@ -30,3 +30,13 @@ get_accounts_in_ou() {
 get_principal_id() {
     response=$(aws identitystore list-$(echo $2 | tr '[:upper:]' '[:lower:]')s --identity-store-id $1 --filters "UserName=$3" | jq -r '.Users[0].UserId // .Groups[0].GroupId')
     echo "$response"
+}
+
+get_permission_set_arn() {
+    permission_set_arn=$(aws sso-admin list-permission-sets --instance-arn $1 | jq -r '.PermissionSets[]' | while read arn; do
+        name=$(aws sso-admin describe-permission-set --instance-arn $1 --permission-set-arn $arn | jq -r '.PermissionSet.Name')
+        [ "$name" == "$2" ] && echo "$arn" && break
+    done)
+    echo "$permission_set_arn"
+}
+
