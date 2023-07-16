@@ -44,5 +44,3 @@ remove_access_from_principal() {
     aws sso-admin delete-account-assignment --instance-arn $1 --target-id $3 --target-type AWS_ACCOUNT --principal-type $2 --principal-id $4 --permission-set-arn $5
     echo "Removed $2 $PRINCIPAL_NAME's Permission Set $PERMISSION_SET_NAME from AWS Account $3"
 }
-
-main() {
