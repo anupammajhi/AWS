@@ -37,3 +37,12 @@ get_permission_set_arn() {
         name=$(aws sso-admin describe-permission-set --instance-arn $1 --permission-set-arn $arn | jq -r '.PermissionSet.Name')
         [ "$name" == "$2" ] && echo "$arn" && break
     done)
+    echo "$permission_set_arn"
+}
+
+remove_access_from_principal() {
+    aws sso-admin delete-account-assignment --instance-arn $1 --target-id $3 --target-type AWS_ACCOUNT --principal-type $2 --principal-id $4 --permission-set-arn $5
+    echo "Removed $2 $PRINCIPAL_NAME's Permission Set $PERMISSION_SET_NAME from AWS Account $3"
+}
+
+main() {
