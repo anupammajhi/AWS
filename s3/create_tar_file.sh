@@ -17,3 +17,4 @@ agtBucket="angularbuildbucket"
 key=""
 tar -cf /tmp/example.tar /tmp/
 
+while IFS= read -r fname; do
