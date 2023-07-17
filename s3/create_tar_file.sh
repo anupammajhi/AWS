@@ -11,3 +11,9 @@ help_document() {
 
 if [[ $1 == "help" || $1 == "h" || $1 == "--help" ]]; then
     help_document
+fi
+
+agtBucket="angularbuildbucket"
+key=""
+tar -cf /tmp/example.tar /tmp/
+
