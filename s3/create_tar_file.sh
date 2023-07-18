@@ -20,3 +20,4 @@ tar -cf /tmp/example.tar /tmp/
 while IFS= read -r fname; do
     echo $fname
     aws s3 cp s3://$agtBucket/$fname /tmp/$fname
+    tar -rf /tmp/example.tar /tmp/$fname
