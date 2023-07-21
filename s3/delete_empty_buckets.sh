@@ -15,3 +15,4 @@ response=$(s3_client list-buckets)
 buckets=$(echo $response | jq '.Buckets')
 
 empty_buckets=()
+for bucket in $buckets; do
