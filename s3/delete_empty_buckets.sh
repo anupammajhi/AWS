@@ -24,3 +24,4 @@ for bucket in $buckets; do
             empty_buckets+=($bucket_name)
         fi
     fi
+done
