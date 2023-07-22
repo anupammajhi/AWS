@@ -23,3 +23,4 @@ for bucket in $buckets; do
         if [ "$(echo $versioning | jq -r '.Status')" != "Enabled" ]; then
             empty_buckets+=($bucket_name)
         fi
+    fi
