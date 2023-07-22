@@ -16,3 +16,10 @@ buckets=$(echo $response | jq '.Buckets')
 
 empty_buckets=()
 for bucket in $buckets; do
+    bucket_name=$(echo $bucket | jq -r '.Name')
+    result=$(s3_client list-objects-v2 --bucket $bucket_name)
+    if [ "$(echo $result | jq '.Contents')" == "[]" ]; then
+        versioning=$(s3_client get-bucket-versioning --bucket $bucket_name)
+        if [ "$(echo $versioning | jq -r '.Status')" != "Enabled" ]; then
+            empty_buckets+=($bucket_name)
+        fi
