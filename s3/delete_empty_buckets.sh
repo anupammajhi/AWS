@@ -25,3 +25,4 @@ for bucket in $buckets; do
         fi
     fi
 done
+
