@@ -26,3 +26,4 @@ for bucket in $buckets; do
     fi
 done
 
+for bucket_name in "${empty_buckets[@]}"; do
