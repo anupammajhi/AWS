@@ -30,3 +30,4 @@ for bucket_name in $s3_bucket_list; do
         if [ "$versioning_status" == "Enabled" ]; then
             aws s3 rm s3://$bucket_name --recursive --version-id-marker null
         else
+            aws s3 rm s3://$bucket_name --recursive
