@@ -7,3 +7,4 @@ help_function() {
     echo "Usage: $0 <bucket-name>"
     exit 0
 }
+
