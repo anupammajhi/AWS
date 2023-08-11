@@ -32,3 +32,4 @@ for bucket_name in $s3_bucket_list; do
         else
             aws s3 rm s3://$bucket_name --recursive
         fi
+
