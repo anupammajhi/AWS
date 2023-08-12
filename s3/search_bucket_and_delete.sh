@@ -33,3 +33,4 @@ for bucket_name in $s3_bucket_list; do
             aws s3 rm s3://$bucket_name --recursive
         fi
 
+        aws s3api delete-bucket --bucket $bucket_name
