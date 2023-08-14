@@ -14,3 +14,7 @@ def ListFiles(client, bucket_name, prefix):
 result=client.list_objects(Bucket=bucket_name, Delimiter='/')
 for obj in result.get('CommonPrefixes'):
     prefix=obj.get('Prefix')
+    file_list=ListFiles(client, bucket_name, prefix)
+    for file in file_list:
+        if 'processed/files' in file:
+            print('Found', file)
