@@ -13,3 +13,4 @@ def ListFiles(client, bucket_name, prefix):
 
 result=client.list_objects(Bucket=bucket_name, Delimiter='/')
 for obj in result.get('CommonPrefixes'):
+    prefix=obj.get('Prefix')
