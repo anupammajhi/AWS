@@ -9,3 +9,13 @@ help_document() {
     echo "Usage: $0"
     exit 0
 }
+
+if [[ "$1" == "help" || "$1" == "h" || "$1" == "--help" ]]; then
+    help_document
+fi
+
+bucket="my-bucket"
+key="path/to/my-file.txt"
+
+key_exists() {
+    s3=$(aws s3api)
