@@ -19,3 +19,4 @@ key="path/to/my-file.txt"
 
 key_exists() {
     s3=$(aws s3api)
+    result=$(s3api head-object --bucket $1 --key $2 2>&1)
