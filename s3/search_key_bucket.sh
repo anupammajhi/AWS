@@ -20,3 +20,13 @@ key="path/to/my-file.txt"
 key_exists() {
     s3=$(aws s3api)
     result=$(s3api head-object --bucket $1 --key $2 2>&1)
+    if [[ $result == *"Not Found"* ]]; then
+        echo "Key: '$2' does not exist!"
+    else
+        echo "Key: '$2' found!"
+    fi
+}
+
+key_exists $bucket $key
+
+
