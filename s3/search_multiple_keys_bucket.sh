@@ -9,3 +9,4 @@ if [[ $1 == "help" || $1 == "h" || $1 == "--help" ]]; then
 fi
 
 function check_keys_exist {
+    bucket="my-bucket"
