@@ -10,3 +10,4 @@ fi
 
 function check_keys_exist {
     bucket="my-bucket"
+    keys_to_check=("path/to/file1.txt" "path/to/file2.txt" "path/to/file3.txt")
