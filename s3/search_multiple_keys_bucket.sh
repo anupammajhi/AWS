@@ -19,3 +19,4 @@ function check_keys_exist {
             exists="true"
         else
             exists="false"
+        fi
