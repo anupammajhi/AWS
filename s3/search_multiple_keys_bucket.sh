@@ -20,3 +20,10 @@ function check_keys_exist {
         else
             exists="false"
         fi
+        echo "Key $key exists: $exists"
+    done
+}
+
+check_keys_exist
+
+
