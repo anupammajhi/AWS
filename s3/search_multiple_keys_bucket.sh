@@ -18,3 +18,4 @@ function check_keys_exist {
         if [[ " ${existing_keys[@]} " =~ " $key " ]]; then
             exists="true"
         else
+            exists="false"
