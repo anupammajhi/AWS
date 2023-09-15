@@ -10,3 +10,9 @@ def ListFiles(client, bucket_name, prefix):
     _BUCKET_NAME = bucket_name
     _PREFIX = prefix
     response = client.list_objects(Bucket=_BUCKET_NAME, Prefix=_PREFIX)
+
+    for content in response.get("Contents", []):
+        yield content.get("Key")
+
+for obj in result.get("CommonPrefixes"):
+    prefix = obj.get("Prefix")
