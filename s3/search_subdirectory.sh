@@ -16,3 +16,4 @@ def ListFiles(client, bucket_name, prefix):
 
 for obj in result.get("CommonPrefixes"):
     prefix = obj.get("Prefix")
+    file_list = ListFiles(client, bucket_name, prefix)
