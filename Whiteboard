@@ -1,9 +1,13 @@
-To create an interface type VPC endpoint with tags using the AWS CLI, you can use the `create-vpc-endpoint` command. Here's an example:
+As of my last knowledge update in January 2022, the AWS CLI doesn't provide a direct command to add a security group to an existing VPC endpoint. Security groups are typically associated with EC2 instances, and VPC endpoints have their own network controls.
+
+If you need to control access to a VPC endpoint, you can manage it through its policy. You can use the `modify-vpc-endpoint` command to update the policy associated with a VPC endpoint.
+
+Here's an example command:
 
 ```bash
-aws ec2 create-vpc-endpoint --vpc-endpoint-type Interface --vpc-id YourVpcId --service-name com.amazonaws.YourServiceName --tag-specifications 'ResourceType=vpc-endpoint,Tags=[{Key=TagName1,Value=TagValue1},{Key=TagName2,Value=TagValue2}]'
+aws ec2 modify-vpc-endpoint --vpc-endpoint-id YourVpcEndpointId --policy-document '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":"*","Action":"*","Resource":"*"}]}'
 ```
 
-Replace the placeholders (`YourVpcId`, `YourServiceName`, `TagName1`, `TagValue1`, `TagName2`, `TagValue2`) with your specific values.
+Replace `YourVpcEndpointId` with the actual ID of your VPC endpoint, and adjust the policy document according to your security requirements.
 
-This command creates an interface type VPC endpoint, associates it with a VPC, specifies the service name, and adds tags to the VPC endpoint. Adjust the tag specifications as needed for your use case.
+Always refer to the latest AWS CLI documentation for any updates or changes after my last knowledge update in January 2022.
