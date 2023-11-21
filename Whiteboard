@@ -1,0 +1,9 @@
+To create an interface type VPC endpoint with tags using the AWS CLI, you can use the `create-vpc-endpoint` command. Here's an example:
+
+```bash
+aws ec2 create-vpc-endpoint --vpc-endpoint-type Interface --vpc-id YourVpcId --service-name com.amazonaws.YourServiceName --tag-specifications 'ResourceType=vpc-endpoint,Tags=[{Key=TagName1,Value=TagValue1},{Key=TagName2,Value=TagValue2}]'
+```
+
+Replace the placeholders (`YourVpcId`, `YourServiceName`, `TagName1`, `TagValue1`, `TagName2`, `TagValue2`) with your specific values.
+
+This command creates an interface type VPC endpoint, associates it with a VPC, specifies the service name, and adds tags to the VPC endpoint. Adjust the tag specifications as needed for your use case.
