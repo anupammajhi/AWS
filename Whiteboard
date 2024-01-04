@@ -1,21 +1,31 @@
-# Install AWS Tools for PowerShell if not already installed
-# Install-Module -Name AWSPowerShell -Force -AllowClobber
+Certainly! Here's an example AWS CLI script to retrieve the organization tree using the `describe-organization` command:
 
-# Configure AWS credentials
-# Set-AWSCredentials -AccessKey <YourAccessKey> -SecretKey <YourSecretKey> -StoreAs MyProfile
+```bash
+#!/bin/bash
 
-# Specify the AWS account ID
-$accountId = "<your-account-id>"
+# Get the root of the organization
+root_id=$(aws organizations describe-organization --output json --query 'Organization.Roots[0].Id')
 
-# List all applied and inherited SCPs for the specified account
-Get-AWSPolicy -ScopeLocal -PolicyType SERVICE_CONTROL_POLICY | ForEach-Object {
-    $policyId = $_.PolicyId
-    $policyName = $_.PolicyName
+# Get the list of accounts in the organization
+accounts=$(aws organizations list-accounts --output json --query 'Accounts')
 
-    # Check if the policy is attached to the account
-    $isAttached = Get-AWSPolicyAttachment -PolicyId $policyId -TargetId $accountId -Recursive
+# Print the organization tree
+echo "Organization Tree:"
+echo "Root (ID: $root_id)"
 
-    if ($isAttached) {
-        Write-Output "Policy '$policyName' (ID: $policyId) is applied to the account."
-    }
-}
+for account in $accounts; do
+    account_id=$(echo $account | jq -r '.Id')
+    account_name=$(echo $account | jq -r '.Name')
+    ou_id=$(aws organizations list-organizational-units-for-parent --parent-id $root_id --output json --query "OrganizationalUnits[?Accounts[?Id=='$account_id']].Id | [0]")
+    
+    if [ "$ou_id" != "null" ]; then
+        echo "└─ Organizational Unit: $account_name (ID: $ou_id)"
+    else
+        echo "└─ Account: $account_name (ID: $account_id)"
+    fi
+done
+```
+
+Make sure to replace the `--output json` and `--query` options with the appropriate formatting for your needs. Save this script to a file (e.g., `get_organization_tree.sh`), make it executable (`chmod +x get_organization_tree.sh`), and run it (`./get_organization_tree.sh`) in a bash environment with the AWS CLI installed.
+
+This script fetches the root of the organization, lists all accounts, and prints the organization tree with information about accounts and organizational units. Note that `jq` is used to parse JSON output, so make sure it's installed on your system.
