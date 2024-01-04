@@ -1,33 +1,21 @@
-Certainly! Here's an example PowerShell script that reads the AWS credentials file (`~\.aws\credentials`) and extracts the access key, secret key, and session token for a specified profile:
+# Install AWS Tools for PowerShell if not already installed
+# Install-Module -Name AWSPowerShell -Force -AllowClobber
 
-```powershell
-# Specify the target AWS profile
-$targetProfile = 'your_target_profile'
+# Configure AWS credentials
+# Set-AWSCredentials -AccessKey <YourAccessKey> -SecretKey <YourSecretKey> -StoreAs MyProfile
 
-# Path to the AWS credentials file
-$credentialsFilePath = Join-Path $env:USERPROFILE '.aws\credentials'
+# Specify the AWS account ID
+$accountId = "<your-account-id>"
 
-# Read the credentials file
-$credentialsContent = Get-Content -Path $credentialsFilePath -Raw
+# List all applied and inherited SCPs for the specified account
+Get-AWSPolicy -ScopeLocal -PolicyType SERVICE_CONTROL_POLICY | ForEach-Object {
+    $policyId = $_.PolicyId
+    $policyName = $_.PolicyName
 
-# Create a regex pattern to match the specified profile
-$pattern = "\[$targetProfile\]\s*`r?`naws_access_key_id\s*=\s*(?<AccessKey>.*?)`r?`naws_secret_access_key\s*=\s*(?<SecretKey>.*?)`r?`naws_session_token\s*=\s*(?<SessionToken>.*?)`r?`n"
+    # Check if the policy is attached to the account
+    $isAttached = Get-AWSPolicyAttachment -PolicyId $policyId -TargetId $accountId -Recursive
 
-# Match the pattern in the credentials content
-$match = [Regex]::Match($credentialsContent, $pattern)
-
-if ($match.Success) {
-    # Extract values from the match
-    $accessKey = $match.Groups['AccessKey'].Value
-    $secretKey = $match.Groups['SecretKey'].Value
-    $sessionToken = $match.Groups['SessionToken'].Value
-
-    Write-Host "AWS Access Key: $accessKey"
-    Write-Host "AWS Secret Key: $secretKey"
-    Write-Host "AWS Session Token: $sessionToken"
-} else {
-    Write-Host "Profile '$targetProfile' not found in AWS credentials file."
+    if ($isAttached) {
+        Write-Output "Policy '$policyName' (ID: $policyId) is applied to the account."
+    }
 }
-```
-
-Make sure to replace `'your_target_profile'` with the actual profile name for which you want to retrieve credentials. The script uses regular expressions to extract the relevant information from the credentials file. It then prints the access key, secret key, and session token for the specified profile if they are present.
