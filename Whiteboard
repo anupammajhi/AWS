@@ -1,48 +1,12 @@
-# Function to get accounts with OU path
-function Get-AccountsWithOUPath {
-    param(
-        [Amazon.PowerShell.Common.AmazonOrganizationsClient]$OrgClient,
-        [string]$OUId,
-        [string]$Path
-    )
+#!/bin/bash
 
-    # List of accounts at this OU
-    $ouList = @()
+# Get a list of all resource types
+resource_types=$(aws resourcegroupstaggingapi get-resources --output json | jq -r '.ResourceTagMappingList[].ResourceType' | sort | uniq)
 
-    # I. Get further children OUs
-    $paginator = $OrgClient.GetPaginator('ListChildren')
-    $pages = $paginator.Paginate(
-        @{
-            ParentId = $OUId
-            ChildType = 'ORGANIZATIONAL_UNIT'
-        }
-    )
-
-    foreach ($page in $pages) {
-        foreach ($child in $page.Children) {
-            $ouList += Get-AccountsWithOUPath -OrgClient $OrgClient -OUId $child.Id -Path ($Path + $OUId + '/')
-        }
-    }
-
-    # II. Get Accounts located at OU
-    $pages = $paginator.Paginate(
-        @{
-            ParentId = $OUId
-            ChildType = 'ACCOUNT'
-        }
-    )
-
-    foreach ($page in $pages) {
-        foreach ($child in $page.Children) {
-            $ouList += ($Path + $OUId + '/' + $child.Id)
-        }
-    }
-
-    return $ouList
-}
-
-# AWS CLI command to get account list with OU path
-$accountList = Get-AccountsWithOUPath -OrgClient (aws organizations) -OUId 'r-xxxx' -Path '/'
-
-# Print the result
-Write-Output $accountList
+# Loop through each resource type and list resources
+for resource_type in $resource_types
+do
+    echo "Resources of type: $resource_type"
+    aws resourcegroupstaggingapi get-resources --resource-type-filters $resource_type --output table
+    echo "-----------------------------"
+done
