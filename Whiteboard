@@ -18,7 +18,6 @@ done
 
 
 
-
 require 'aws-sdk-dynamodb'
 
 # Initialize the DynamoDB client
@@ -28,20 +27,27 @@ ddb = Aws::DynamoDB::Client.new(region: 'your-region')
 table_name = 'your-table-name'
 key = { 'primaryKeyName' => 'primaryKeyValue' }
 
-# Define the expression attribute values for the new key-value pair
-expression_attribute_values = {
-  ':newKey' => 'newValue'
-}
-
-# Define the update expression to add the new key-value pair
-update_expression = 'SET #newKey = :newKey'
-expression_attribute_names = { '#newKey' => 'newAttributeName' } # Replace 'newAttributeName' with the actual attribute name
-
-# Update the item in the DynamoDB table
-ddb.update_item({
+# Check if the SuspendedDate attribute already exists in the item
+existing_item = ddb.get_item({
   table_name: table_name,
-  key: key,
-  update_expression: update_expression,
-  expression_attribute_values: expression_attribute_values,
-  expression_attribute_names: expression_attribute_names
-})
+  key: key
+}).item
+
+# If SuspendedDate attribute doesn't exist, update it
+if existing_item.nil? || existing_item['SuspendedDate'].nil?
+  # Define the expression attribute values for the new key-value pair
+  expression_attribute_values = {
+    ':suspendedDate' => '12/13/2023'
+  }
+
+  # Define the update expression to add the new key-value pair
+  update_expression = 'SET SuspendedDate = :suspendedDate'
+
+  # Update the item in the DynamoDB table
+  ddb.update_item({
+    table_name: table_name,
+    key: key,
+    update_expression: update_expression,
+    expression_attribute_values: expression_attribute_values
+  })
+end
