@@ -10,3 +10,38 @@ do
     aws resourcegroupstaggingapi get-resources --resource-type-filters $resource_type --output table
     echo "-----------------------------"
 done
+
+
+
+
+
+
+
+
+
+require 'aws-sdk-dynamodb'
+
+# Initialize the DynamoDB client
+ddb = Aws::DynamoDB::Client.new(region: 'your-region')
+
+# Define the table name and the key of the item you want to update
+table_name = 'your-table-name'
+key = { 'primaryKeyName' => 'primaryKeyValue' }
+
+# Define the expression attribute values for the new key-value pair
+expression_attribute_values = {
+  ':newKey' => 'newValue'
+}
+
+# Define the update expression to add the new key-value pair
+update_expression = 'SET #newKey = :newKey'
+expression_attribute_names = { '#newKey' => 'newAttributeName' } # Replace 'newAttributeName' with the actual attribute name
+
+# Update the item in the DynamoDB table
+ddb.update_item({
+  table_name: table_name,
+  key: key,
+  update_expression: update_expression,
+  expression_attribute_values: expression_attribute_values,
+  expression_attribute_names: expression_attribute_names
+})
