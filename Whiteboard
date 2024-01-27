@@ -17,6 +17,25 @@ done
 
 
 
+resources=$(aws resourcegroupstaggingapi get-resources --output json | jq -r '.ResourceTagMappingList[].ResourceARN')
+
+next_token=$(aws resourcegroupstaggingapi get-resources --output json | jq -r '.PaginationToken')
+
+while [ ! -z "$next_token" ]; do
+    resources="$resources $(aws resourcegroupstaggingapi get-resources --output json --starting-token "$next_token" | jq -r '.ResourceTagMappingList[].ResourceARN')"
+    next_token=$(aws resourcegroupstaggingapi get-resources --output json --starting-token "$next_token" | jq -r '.PaginationToken')
+done
+
+sorted_resources=$(echo "$resources" | sort | uniq)
+
+echo "$sorted_resources"
+
+
+
+
+
+
+
 
 require 'aws-sdk-dynamodb'
 
