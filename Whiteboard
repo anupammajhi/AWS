@@ -70,3 +70,7 @@ if existing_item.nil? || existing_item['SuspendedDate'].nil?
     expression_attribute_values: expression_attribute_values
   })
 end
+
+
+
+aws cloudformation list-stacks --query 'StackSummaries[].StackName' --output text | xargs -I {} aws cloudformation describe-stack-resources --stack-name {} --query 'StackResources[?ResourceType==`AWS::IAM::Role`].[PhysicalResourceId]' --output text
