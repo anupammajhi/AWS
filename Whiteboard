@@ -1,4 +1,4 @@
-#!/bin/bash
+2#!/bin/bash
 
 # Get a list of all resource types
 resource_types=$(aws resourcegroupstaggingapi get-resources --output json | jq -r '.ResourceTagMappingList[].ResourceType' | sort | uniq)
@@ -74,3 +74,5 @@ end
 
 
 aws cloudformation list-stacks --query 'StackSummaries[].StackName' --output text | xargs -I {} aws cloudformation describe-stack-resources --stack-name {} --query 'StackResources[?ResourceType==`AWS::IAM::Role`].[PhysicalResourceId]' --output text
+
+aws cloudformation list-stacks --query 'StackSummaries[].StackName' --output text | while read -r stack; do aws cloudformation describe-stack-resources --stack-name "$stack" --query 'StackResources[?ResourceType==`AWS::IAM::Role`].[PhysicalResourceId]' --output text; done
