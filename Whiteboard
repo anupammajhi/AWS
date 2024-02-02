@@ -76,3 +76,88 @@ end
 aws cloudformation list-stacks --query 'StackSummaries[].StackName' --output text | xargs -I {} aws cloudformation describe-stack-resources --stack-name {} --query 'StackResources[?ResourceType==`AWS::IAM::Role`].[PhysicalResourceId]' --output text
 
 aws cloudformation list-stacks --query 'StackSummaries[].StackName' --output text | while read -r stack; do aws cloudformation describe-stack-resources --stack-name "$stack" --query 'StackResources[?ResourceType==`AWS::IAM::Role`].[PhysicalResourceId]' --output text; done
+
+
+
+
+
+
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ec2:CreateTags",
+                "ec2:DeleteTags",
+                "s3:PutObjectTagging",
+                "s3:GetObjectTagging",
+                "rds:AddTagsToResource",
+                "rds:RemoveTagsFromResource",
+                "lambda:TagResource",
+                "lambda:UntagResource",
+                "sqs:TagQueue",
+                "sqs:UntagQueue",
+                "sagemaker:AddTags",
+                "sagemaker:DeleteTags",
+                "redshift:CreateTags",
+                "redshift:DeleteTags",
+                "dynamodb:TagResource",
+                "dynamodb:UntagResource",
+                "ecs:TagResource",
+                "ecs:UntagResource",
+                "ebs:CreateTags",
+                "ebs:DeleteTags",
+                "eks:TagResource",
+                "eks:UntagResource",
+                "elasticache:AddTagsToResource",
+                "elasticache:RemoveTagsFromResource",
+                "glacier:AddTagsToVault",
+                "glacier:RemoveTagsFromVault",
+                "elastictranscoder:CreateJob",
+                "elastictranscoder:UpdatePipeline",
+                "apigateway:PUT",
+                "apigateway:POST",
+                "cloudfront:TagResource",
+                "cloudfront:UntagResource",
+                "logs:TagLogGroup",
+                "logs:UntagLogGroup",
+                "sns:TagResource",
+                "sns:UntagResource",
+                "ecr:TagResource",
+                "ecr:UntagResource",
+                "glue:CreateTags",
+                "glue:DeleteTags",
+                "workspaces:CreateTags",
+                "workspaces:DeleteTags",
+                "emr:AddTags",
+                "emr:RemoveTags",
+                "kinesis:TagStream",
+                "kinesis:UntagStream",
+                "neptune-db:AddTagsToResource",
+                "neptune-db:RemoveTagsFromResource",
+                "route53:ChangeResourceRecordSets",
+                "ssm:AddTagsToResource",
+                "ssm:RemoveTagsFromResource",
+                "events:PutRule",
+                "events:PutTargets",
+                "athena:TagResource",
+                "athena:UntagResource",
+                "cloudformation:TagResource",
+                "cloudformation:UntagResource",
+                "cloudwatch:TagResource",
+                "cloudwatch:UntagResource",
+                "elasticbeanstalk:AddTags",
+                "elasticbeanstalk:RemoveTags",
+                "elasticfilesystem:CreateTags",
+                "elasticfilesystem:DeleteTags",
+                "elastic-inference:AddTags",
+                "elastic-inference:RemoveTags",
+                "es:AddTags",
+                "es:RemoveTags"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
