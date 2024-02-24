@@ -1,5 +1,4 @@
-﻿
-#!/bin/bash
+﻿#!/bin/bash
 ## Author: Anupam Majhi
 ## Github: https://github.com/anupammajhi/AWS
 
@@ -14,40 +13,28 @@ if [[ $1 == "help" || $1 == "h" || $1 == "--help" ]]; then
 fi
 
 get_inactive_task_definition_arns() {
-    client=boto3.client("ecs", region_name="$1")
-    arns=()
-    paginator=client.get_paginator("list_task_definitions")
-    for page in paginator.paginate(status="INACTIVE"); do
-        arns+=($(echo $page | jq -r '.taskDefinitionArns[]'))
-    done
-    echo "${arns[@]}"
+    aws ecs list-task-definitions --status INACTIVE --region "$1" | jq -r '.taskDefinitionArns[]'
 }
 
 delete_task_definition() {
-    client=boto3.client("ecs", region_name="$1")
-    max_retries=5
-    backoff=1
-    for attempt in $(seq 1 $max_retries); do
-        client.delete_task_definitions(taskDefinitions="$2")
-        echo "Deleted task definition $2"
-        break
-    done
+    aws ecs deregister-task-definition --task-definition "$2" --region "$1"
+    echo "Deleted task definition $2"
 }
 
 delete_inactive_task_definitions_in_region() {
-    arns=($(get_inactive_task_definition_arns "$1"))
-    if [ ${#arns[@]} -eq 0 ]; then
+    arns=$(get_inactive_task_definition_arns "$1")
+    if [ -z "$arns" ]; then
         echo "No inactive task definitions found in region $1"
     else
-        for arn in "${arns[@]}"; do
+        for arn in $arns; do
             delete_task_definition "$1" "$arn"
         done
     fi
 }
 
 delete_inactive_task_definitions_in_all_regions() {
-    ecs_regions=($(boto3.session.Session().get_available_regions("ecs")))
-    for region in "${ecs_regions[@]}"; do
+    ecs_regions=$(aws ec2 describe-regions --output text | cut -f3)
+    for region in $ecs_regions; do
         delete_inactive_task_definitions_in_region "$region"
     done
 }
@@ -59,5 +46,3 @@ elif [ $# -eq 1 ]; then
 else
     delete_inactive_task_definitions_in_all_regions
 fi
-
-

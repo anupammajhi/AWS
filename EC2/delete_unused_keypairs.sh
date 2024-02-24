@@ -1,24 +1,34 @@
-﻿import argparse
-import boto3
+﻿#!/bin/bash
 
-def delete_unused_key_pairs():
-    ec2 = boto3.resource("ec2")
-    key_pairs = ec2.key_pairs.all()
+delete_unused_key_pairs() {
+    echo "Checking for unused EC2 key pairs..."
 
-    used_keys = set([instance.key_name for instance in ec2.instances.all()])
-    unused_keys = [
-        key_pair.name for key_pair in key_pairs if key_pair.name not in used_keys
-    ]
+    # Get a list of all key pairs
+    key_pairs=$(aws ec2 describe-key-pairs --query 'KeyPairs[*].KeyName' --output text)
 
-    for key_name in unused_keys:
-        ec2.KeyPair(key_name).delete()
+    # Get a list of all used key names
+    used_keys=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].KeyName' --output text)
 
-    print(f"Deleted {len(unused_keys)} unused key pairs.")
+    # Loop through all key pairs, delete if not used
+    unused_keys=()
+    for key_name in $key_pairs; do
+        if ! grep -q "$key_name" <<< "$used_keys"; then
+            unused_keys+=("$key_name")
+            aws ec2 delete-key-pair --key-name "$key_name"
+        fi
+    done
 
-if __name__ == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1] in ['help', 'h', '--help']:
-        print("Help document goes here")
-        exit()
+    num_deleted=${#unused_keys[@]}
+    echo "Deleted $num_deleted unused key pairs."
+}
 
-    delete_unused_key_pairs()
+if [[ $# -gt 0 && ($1 == "--help" || $1 == "help" || $1 == "-h") ]]; then
+    echo "Usage: $0 [OPTION]"
+    echo "Deletes unused EC2 key pairs."
+    echo
+    echo "Options:"
+    echo "  --help, -h    display this help and exit"
+}
+fi
 
+delete_unused_key_pairs

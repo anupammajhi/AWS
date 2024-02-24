@@ -1,5 +1,4 @@
-﻿
-#!/bin/bash
+﻿#!/bin/bash
 ## Author: Anupam Majhi
 ## Github: https://github.com/anupammajhi/AWS
 
@@ -10,6 +9,7 @@ fi
 
 role_arn_to_session() {
     client=$(aws sts assume-role "$@")
+    role_arn=$(echo "$client" | jq -r '.Credentials.RoleArn')
     access_key_id=$(echo "$client" | jq -r '.Credentials.AccessKeyId')
     secret_access_key=$(echo "$client" | jq -r '.Credentials.SecretAccessKey')
     session_token=$(echo "$client" | jq -r '.Credentials.SessionToken')
@@ -23,7 +23,8 @@ set_boto3_clients() {
 }
 
 delete_awsconfig_rule_evaluations() {
-    aws configservice delete-evaluation-results --config-rule-name "SHIELD_002"
+    local config_rule_name="SHIELD_002" # or read from a configuration file
+    aws configservice delete-evaluation-results --config-rule-name "$config_rule_name"
 }
 
 lambda_handler() {
@@ -37,5 +38,3 @@ lambda_handler() {
 aws_account_list=("111111111111" "222222222222" "333333333333")
 
 lambda_handler
-
-

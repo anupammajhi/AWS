@@ -15,20 +15,13 @@ export AWS_ACCESS_KEY_ID="your_access_key_id"
 export AWS_SECRET_ACCESS_KEY="your_secret_access_key"
 export AWS_DEFAULT_REGION="your_aws_region"
 
-# Create boto3 clients
-sso_admin_client="boto3.client('sso-admin')"
-identitystore_client="boto3.client('identitystore')"
-
 # Function to get Identity Store information
 get_instance_information() {
-    response=$($sso_admin_client list_instances)
-    if [[ -z $(echo $response | jq -r '.Instances') ]]; then
-        echo "No SSO instances found"
-        exit 1
-    fi
-    instance_info=$(echo $response | jq -r '.Instances[0].IdentityStoreId')
-    echo $instance_info
+    response=$(aws sso-admin list-instances --query 'Instances[0].IdentityStoreId' --output text)
+    echo $response
 }
+
+# rest of your code...
 
 # Function to find a group based on group name
 find_group() {
@@ -36,7 +29,7 @@ find_group() {
     group_name=$2
     next_token=""
     while true; do
-        response=$(identitystore_client list_groups --IdentityStoreId $identity_store_id --NextToken $next_token)
+        response=$(aws identitystore list_groups --IdentityStoreId $identity_store_id --NextToken $next_token)
         for group in $(echo $response | jq -c '.Groups[]'); do
             if [[ $(echo $group | jq -r '.DisplayName') == "$group_name" ]]; then
                 group_id=$(echo $group | jq -r '.GroupId')
@@ -56,7 +49,7 @@ find_group() {
 create_group() {
     identity_store_id=$1
     group_name=$2
-    group=$(identitystore_client create_group --IdentityStoreId $identity_store_id --DisplayName $group_name)
+    group=$(aws identitystore create_group --IdentityStoreId $identity_store_id --DisplayName $group_name)
     echo "Group $group_name created"
     echo $(echo $group | jq -r '.GroupId')
 }
@@ -84,7 +77,7 @@ create_user() {
         return
     fi
 
-    response=$(identitystore_client create_user --IdentityStoreId $identity_store_id --UserName $email --Name "{\"Formatted\": \"$first_name $last_name\", \"FamilyName\": \"$last_name\", \"GivenName\": \"$first_name\"}" --DisplayName "$first_name $last_name" --Emails "[{\"Value\": \"$email\", \"Type\": \"Work\", \"Primary\": true}]")
+    response=$(aws identitystore create_user --IdentityStoreId $identity_store_id --UserName $email --Name "{\"Formatted\": \"$first_name $last_name\", \"FamilyName\": \"$last_name\", \"GivenName\": \"$first_name\"}" --DisplayName "$first_name $last_name" --Emails "[{\"Value\": \"$email\", \"Type\": \"Work\", \"Primary\": true}]")
     user_id=$(echo $response | jq -r '.UserId')
     echo "Created user $email"
     echo $user_id
@@ -94,7 +87,7 @@ create_user() {
 find_user_by_email() {
     identity_store_id=$1
     email=$2
-    response=$(identitystore_client list_users --IdentityStoreId $identity_store_id --Filters "[{\"AttributePath\": \"UserName\", \"AttributeValue\": \"$email\"}]")
+    response=$(aws identitystore list_users --IdentityStoreId $identity_store_id --Filters "[{\"AttributePath\": \"UserName\", \"AttributeValue\": \"$email\"}]")
 
     if [[ -n $(echo $response | jq -r '.Users') ]]; then
         user_id=$(echo $response | jq -r '.Users[0].UserId')
@@ -111,7 +104,7 @@ add_user_to_group() {
     group_id=$3
     email=$4
     group_name=$5
-    identitystore_client create_group_membership --IdentityStoreId $identity_store_id --GroupId $group_id --MemberId "{\"UserId\": \"$user_id\"}"
+    aws identitystore create_group_membership --IdentityStoreId $identity_store_id --GroupId $group_id --MemberId "{\"UserId\": \"$user_id\"}"
     echo "Added user $email to group $group_name"
 }
 

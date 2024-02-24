@@ -8,18 +8,15 @@ if [ "$1" == "help" ] || [ "$1" == "h" ] || [ "$1" == "--help" ]; then
     exit 0
 fi
 
-s3_client=$(aws s3api)
-s3=$(aws s3)
-
-response=$(s3_client list-buckets)
+response=$(aws s3api list-buckets)
 buckets=$(echo $response | jq '.Buckets')
 
 empty_buckets=()
 for bucket in $buckets; do
     bucket_name=$(echo $bucket | jq -r '.Name')
-    result=$(s3_client list-objects-v2 --bucket $bucket_name)
+    result=$(aws s3api list-objects-v2 --bucket $bucket_name)
     if [ "$(echo $result | jq '.Contents')" == "[]" ]; then
-        versioning=$(s3_client get-bucket-versioning --bucket $bucket_name)
+        versioning=$(aws s3api get-bucket-versioning --bucket $bucket_name)
         if [ "$(echo $versioning | jq -r '.Status')" != "Enabled" ]; then
             empty_buckets+=($bucket_name)
         fi
@@ -27,7 +24,7 @@ for bucket in $buckets; do
 done
 
 for bucket_name in "${empty_buckets[@]}"; do
-    s3 rm s3://$bucket_name --recursive
+    aws s3 rm s3://$bucket_name --recursive
     echo "Bucket $bucket_name deleted."
 done
 
