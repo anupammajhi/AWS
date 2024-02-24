@@ -41,3 +41,9 @@ delete_mfa_devices() {
 }
 
 delete_access_keys
+delete_signing_certificates
+delete_login_profile
+delete_mfa_devices
+
+
+

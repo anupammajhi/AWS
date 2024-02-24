@@ -52,3 +52,9 @@ else
 
     for account in "${accounts[@]}"; do
         account_id=$(echo $account | jq -r '.Id')
+        account_alias=$(echo $account | jq -r '.Alias // .Name')
+        echo "Account ID: $account_id, Account Alias/Name: $account_alias"
+    done
+fi
+
+

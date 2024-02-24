@@ -70,3 +70,15 @@ echo $ECR_URL
 
 if [ -z $ECR_URL ]; then
     usage
+    exit
+fi
+
+echo "Chosen AWS profile: $AWS_PROFILE"
+echo "Chosen ECR repository address: $ECR_URL"
+echo "Chosen Dockerfile to use for building the image: $DOCKER_FILE"
+
+aws ecr --profile ${AWS_PROFILE} get-login-password | docker login --username AWS --password-stdin "${ECR_URL}"
+
+docker build -t "$ECR_URL:$TAG" -f ${DOCKER_FILE} .
+docker tag "$ECR_URL":"$TAG" "$ECR_URL":$TAG
+docker push "$ECR_URL":$TAG

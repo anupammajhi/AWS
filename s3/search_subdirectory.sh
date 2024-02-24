@@ -20,3 +20,4 @@ for obj in result.get("CommonPrefixes"):
     for file in file_list:
         if "processed/files" in file:
             print("Found", file)
+

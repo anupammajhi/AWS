@@ -30,3 +30,8 @@ if [ -z "$response" ]; then
     exit
 fi
 
+accounts=$(echo "$response" | jq -r '.Summaries[].Account' | sort | uniq)
+regions=$(echo "$response" | jq -r '.Summaries[].Region' | sort | uniq)
+
+printf "Deleting stackset instances for accounts: %s\n" "$accounts"
+aws cloudformation delete-stack-instances --stack-set-name "$stackset_name" --accounts "$accounts" --regions "$regions" --retain-stacks "$retain_stacks"

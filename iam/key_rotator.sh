@@ -50,3 +50,39 @@ create_key() {
     fi
     access_key_metadata=$($iam_client iam create-access-key --user-name "$1")
     access_key=$(echo "$access_key_metadata" | jq -r '.AccessKey.AccessKeyId')
+    secret_key=$(echo "$access_key_metadata" | jq -r '.AccessKey.SecretAccessKey')
+    echo "Your new access key is $access_key and your new secret key is $secret_key"
+}
+
+disable_key() {
+    read -p "Do you want to disable the access key $1? [y/N] " answer
+    if [ "$answer" == "y" ]; then
+        $iam_client iam update-access-key --user-name "$username" --access-key-id "$1" --status Inactive
+        echo "$1 has been disabled."
+    else
+        echo "Aborting."
+    fi
+}
+
+delete_key() {
+    read -p "Do you want to delete the access key $1? [y/N] " answer
+    if [ "$answer" == "y" ]; then
+        $iam_client iam delete-access-key --user-name "$username" --access-key-id "$1"
+        echo "$1 has been deleted."
+    else
+        echo "Aborting."
+    fi
+}
+
+keys=$($iam_client iam list-access-keys --user-name "$username" | jq -r '.AccessKeyMetadata')
+inactive_keys=$(echo "$keys" | jq '[.[] | select(.Status=="Inactive")] | length')
+active_keys=$(echo "$keys" | jq '[.[] | select(.Status=="Active")] | length')
+echo "$username has $inactive_keys inactive keys and $active_keys active keys"
+if [ "$disable_key" = true ]; then
+    disable_key "$aws_access_key"
+elif [ "$delete_key" = true ]; then
+    delete_key "$aws_access_key"
+else
+    create_key "$username"
+fi
+

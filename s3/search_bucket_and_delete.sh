@@ -34,3 +34,7 @@ for bucket_name in $s3_bucket_list; do
         fi
 
         aws s3api delete-bucket --bucket $bucket_name
+        echo "Deleted bucket: $bucket_name"
+    fi
+done
+

@@ -79,3 +79,15 @@ assign_access_to_principal() {
 }
 
 main() {
+    read instance_arn identity_store_id < <(get_instance_information)
+    principal_id=$(get_principal_id $identity_store_id $PRINCIPAL_NAME $PRINCIPAL_TYPE)
+    permission_set_arn=$(get_permission_set_arn $instance_arn $PERMISSION_SET_NAME)
+    account_ids=$(get_accounts_in_ou)
+    for account_id in $account_ids; do
+        assign_access_to_principal $instance_arn $principal_id $account_id $permission_set_arn
+    done
+}
+
+main
+
+

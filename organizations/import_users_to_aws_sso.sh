@@ -108,3 +108,30 @@ find_user_by_email() {
 add_user_to_group() {
     identity_store_id=$1
     user_id=$2
+    group_id=$3
+    email=$4
+    group_name=$5
+    identitystore_client create_group_membership --IdentityStoreId $identity_store_id --GroupId $group_id --MemberId "{\"UserId\": \"$user_id\"}"
+    echo "Added user $email to group $group_name"
+}
+
+# Main function
+main() {
+    csv_file=$1
+    identity_store_id=$(get_instance_information)
+
+    # Read the CSV file and process each row
+    while IFS=',' read -r first_name last_name email group_name; do
+        group_id=$(create_group_if_not_exists $identity_store_id $group_name)
+        if [[ -n $group_id ]]; then
+            user_id=$(create_user $identity_store_id $first_name $last_name $email)
+            if [[ -n $user_id ]]; then
+                add_user_to_group $identity_store_id $user_id $group_id $email $group_name
+            fi
+        fi
+    done < $csv_file
+}
+
+main $1
+
+

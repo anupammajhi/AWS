@@ -8,3 +8,10 @@ help_document() {
     exit 1
 }
 
+if [ "$1" == "help" ] || [ "$1" == "h" ] || [ "$1" == "--help" ]; then
+    help_document
+fi
+
+aws lambda invoke --function-name lambda_handler --payload '{"invokingEvent": "{\"messageType\":\"ScheduledNotification\"}"}' /dev/stdout
+
+

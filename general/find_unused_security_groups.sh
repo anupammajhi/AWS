@@ -35,3 +35,16 @@ done
 response=$(aws ec2 describe-security-groups)
 total_SG=($(echo "$response" | jq -r '.SecurityGroups[].GroupId'))
 unused_SG=()
+
+for sg in "${total_SG[@]}"; do
+    if [[ ! " ${used_SG[@]} " =~ " $sg " ]]; then
+        unused_SG+=("$sg")
+    fi
+done
+
+echo "Total Security Groups: ${#total_SG[@]}"
+echo "Used Security Groups: ${#used_SG[@]}"
+echo "Unused Security Groups: ${#unused_SG[@]} compiled in the following list:"
+echo "${unused_SG[@]}"
+
+

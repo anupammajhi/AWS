@@ -21,3 +21,8 @@ while IFS= read -r fname; do
     echo $fname
     aws s3 cp s3://$agtBucket/$fname /tmp/$fname
     tar -rf /tmp/example.tar /tmp/$fname
+done < <(aws s3 ls s3://$agtBucket/$key | awk '{print $4}')
+
+aws s3 cp /tmp/example.tar s3://$agtBucket/example.tar
+
+

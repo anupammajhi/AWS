@@ -1,4 +1,6 @@
-#!/usr/bin/env bash
+#!/bin/bash
+## Author: Anupam Majhi
+## Github: https://github.com/anupammajhi/AWS
 
 ## Author: Anupam Majhi
 ## Github: https://github.com/anupammajhi/AWS

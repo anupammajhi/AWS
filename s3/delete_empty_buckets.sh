@@ -27,3 +27,7 @@ for bucket in $buckets; do
 done
 
 for bucket_name in "${empty_buckets[@]}"; do
+    s3 rm s3://$bucket_name --recursive
+    echo "Bucket $bucket_name deleted."
+done
+

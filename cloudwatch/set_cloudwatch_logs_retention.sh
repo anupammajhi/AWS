@@ -30,3 +30,4 @@ else
     echo "Log group does not exist"
 fi
 
+exit 0

@@ -59,3 +59,11 @@ for sg_id in "${unused_SG[@]}"; do
     sg_name=$(aws ec2 describe-security-groups --group-ids $sg_id --profile $aws_profile --region $region | jq -r '.SecurityGroups[0].GroupName')
 
     if [[ $sg_name == *"default"* ]]; then
+        echo "Skipping deletion of security group '$sg_name' (ID: $sg_id) because it contains 'default'"
+    else
+        echo "Deleting security group '$sg_name' (ID: $sg_id)"
+        aws ec2 delete-security-group --group-id $sg_id --profile $aws_profile --region $region
+    fi
+done
+
+

@@ -69,3 +69,6 @@ efs_filesystems=$(find_efs_filesystems)
 
 for fs in $efs_filesystems; do
     filesystem_id=$(echo "$fs" | jq -r '.FileSystemId')
+    delete_efs_filesystem "$filesystem_id"
+done
+

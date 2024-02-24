@@ -50,3 +50,12 @@ main() {
     principal_id=$(get_principal_id $identity_store_id $PRINCIPAL_TYPE $PRINCIPAL_NAME)
     permission_set_arn=$(get_permission_set_arn $instance_arn $PERMISSION_SET_NAME)
     account_ids=($(get_accounts_in_ou $OU_NAME))
+
+    for account_id in "${account_ids[@]}"; do
+        remove_access_from_principal $instance_arn $PRINCIPAL_TYPE $account_id $principal_id $permission_set_arn
+    done
+}
+
+main
+
+
